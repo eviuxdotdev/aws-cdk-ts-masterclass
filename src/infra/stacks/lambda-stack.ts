@@ -2,6 +2,7 @@ import { Stack, StackProps } from 'aws-cdk-lib';
 import { LambdaIntegration } from 'aws-cdk-lib/aws-apigateway';
 import { ITable } from 'aws-cdk-lib/aws-dynamodb';
 import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import { join } from 'path';
 
@@ -14,10 +15,10 @@ export class LambdaStack extends Stack {
 
   constructor(scope: Construct, id: string, props: LambdaStackProps) {
     super(scope, id, props);
-    const helloLambda = new Function(this, 'HelloWorldFunction', {
+    const helloLambda = new NodejsFunction(this, 'HelloWorldFunction', {
       runtime: Runtime.NODEJS_18_X,
-      handler: 'hello.handler',
-      code: Code.fromAsset(join(__dirname, '..', '..', 'services')),
+      entry: join(__dirname, '..', '..', 'services', 'hello.ts'),
+      handler: 'handler',
       environment: {
         SPACES_TABLE: props.spacesTable.tableName,
       },
