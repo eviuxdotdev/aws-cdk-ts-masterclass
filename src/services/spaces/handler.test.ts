@@ -1,3 +1,9 @@
 import { handler } from './handler';
 
-handler({} as any, {} as any);
+handler(
+  {
+    httpMethod: 'POST',
+    body: JSON.stringify({ location: 'London' }),
+  } as any,
+  {} as any
+);
