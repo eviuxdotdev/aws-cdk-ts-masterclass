@@ -11,19 +11,19 @@ interface LambdaStackProps extends StackProps {
 }
 
 export class LambdaStack extends Stack {
-  public readonly helloLambdaIntegration: LambdaIntegration;
+  public readonly spacesLambdaIntegration: LambdaIntegration;
 
   constructor(scope: Construct, id: string, props: LambdaStackProps) {
     super(scope, id, props);
-    const helloLambda = new NodejsFunction(this, 'HelloWorldFunction', {
+    const spacesLambda = new NodejsFunction(this, 'SpacesFunction', {
       runtime: Runtime.NODEJS_18_X,
-      entry: join(__dirname, '..', '..', 'services', 'hello.ts'),
+      entry: join(__dirname, '..', '..', 'services', 'spaces', 'handler.ts'),
       handler: 'handler',
       environment: {
         SPACES_TABLE: props.spacesTable.tableName,
       },
     });
 
-    this.helloLambdaIntegration = new LambdaIntegration(helloLambda);
+    this.spacesLambdaIntegration = new LambdaIntegration(spacesLambda);
   }
 }
