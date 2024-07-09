@@ -8,9 +8,10 @@ import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { getSpace } from './api/get';
 import { postSpace } from './api/post';
 import { putSpace } from './api/put';
+import { deleteSpace } from './api/delete';
 
 const ddbClient = new DynamoDBClient({});
-const ddbDocClient = DynamoDBDocumentClient.from(ddbClient)
+const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
 
 export async function handler(event: APIGatewayProxyEvent, context: Context) {
   let message: string;
@@ -23,6 +24,8 @@ export async function handler(event: APIGatewayProxyEvent, context: Context) {
         return await postSpace(event, ddbDocClient);
       case 'PUT':
         return await putSpace(event, ddbDocClient);
+      case 'DELETE':
+        return await deleteSpace(event, ddbDocClient);
 
       default:
         message = 'Hello from method not supported' + event.httpMethod;
