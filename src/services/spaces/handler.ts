@@ -3,10 +3,11 @@ import {
   APIGatewayProxyResult,
   Context,
 } from 'aws-lambda';
-import { postSpace } from './api/post';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { getSpace } from './api/get';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { getSpace } from './api/get';
+import { postSpace } from './api/post';
+import { putSpace } from './api/put';
 
 const ddbClient = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(ddbClient)
@@ -17,10 +18,11 @@ export async function handler(event: APIGatewayProxyEvent, context: Context) {
   try {
     switch (event.httpMethod) {
       case 'GET':
-        const response = await getSpace(event, ddbDocClient);
-        return response;
+        return await getSpace(event, ddbDocClient);
       case 'POST':
         return await postSpace(event, ddbDocClient);
+      case 'PUT':
+        return await putSpace(event, ddbDocClient);
 
       default:
         message = 'Hello from method not supported' + event.httpMethod;
