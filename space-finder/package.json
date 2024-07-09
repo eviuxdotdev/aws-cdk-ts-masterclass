@@ -18,7 +18,8 @@
     "constructs": "^10.3.0",
     "esbuild": "^0.23.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "aws-amplify": "^6.4.0"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.609.0",
