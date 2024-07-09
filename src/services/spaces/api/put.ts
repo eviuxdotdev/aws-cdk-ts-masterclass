@@ -32,7 +32,7 @@ export async function putSpace(
   );
 
   return {
-    statusCode: 204,
-    body: JSON.stringify(result.Attributes),
+    statusCode: 200,
+    body: JSON.stringify(result.Attributes || {}),
   };
 }
