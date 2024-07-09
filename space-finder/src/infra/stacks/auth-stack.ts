@@ -1,5 +1,10 @@
 import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
-import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito';
+import {
+  CfnIdentityPool,
+  CfnUserPoolGroup,
+  UserPool,
+  UserPoolClient,
+} from 'aws-cdk-lib/aws-cognito';
 import { Construct } from 'constructs';
 
 export class AuthStack extends Stack {
@@ -11,6 +16,8 @@ export class AuthStack extends Stack {
 
     this.createUserPool();
     this.createUserPoolClient();
+    this.createAdminUserGroup();
+    this.createIdentityPool();
   }
 
   private createUserPool() {
@@ -38,6 +45,30 @@ export class AuthStack extends Stack {
     });
 
     new CfnOutput(this, 'SpacesUserPoolClientId', {
+      value: this.userPoolClient.userPoolClientId,
+    });
+  }
+
+  private createAdminUserGroup() {
+    new CfnUserPoolGroup(this, 'SpaceAdmins', {
+      userPoolId: this.userPool.userPoolId,
+      groupName: 'space-admins',
+    });
+  }
+
+  private createIdentityPool() {
+    new CfnIdentityPool(this, 'SpaceIdentityPool', {
+      allowUnauthenticatedIdentities: true,
+      allowClassicFlow: true,
+      cognitoIdentityProviders: [
+        {
+          clientId: this.userPoolClient.userPoolClientId,
+          providerName: this.userPool.userPoolProviderName,
+        },
+      ],
+    });
+
+    new CfnOutput(this, 'SpaceIdentityPoolId', {
       value: this.userPoolClient.userPoolClientId,
     });
   }
