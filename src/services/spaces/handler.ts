@@ -3,8 +3,9 @@ import {
   APIGatewayProxyResult,
   Context,
 } from 'aws-lambda';
-import { createSpace } from './api/create';
+import { postSpace } from './api/post';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { getSpace } from './api/get';
 
 const ddbClient = new DynamoDBClient({});
 
@@ -14,10 +15,10 @@ export async function handler(event: APIGatewayProxyEvent, context: Context) {
   try {
     switch (event.httpMethod) {
       case 'GET':
-        message = 'Hello from GET';
-        break;
+        const response = await getSpace(event, ddbClient);
+        return response;
       case 'POST':
-        return createSpace(event, ddbClient);
+        return await postSpace(event, ddbClient);
 
       default:
         message = 'Hello from method not supported' + event.httpMethod;

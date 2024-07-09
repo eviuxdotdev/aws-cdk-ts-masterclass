@@ -2,7 +2,7 @@ import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { ulid } from 'ulid';
 
-export async function createSpace(
+export async function postSpace(
   event: APIGatewayProxyEvent,
   ddb: DynamoDBClient
 ): Promise<APIGatewayProxyResult> {
