@@ -4,6 +4,7 @@ import {
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { parseJson } from '../../shared/parseJson';
 
 export async function putSpace(
   event: APIGatewayProxyEvent,
@@ -15,7 +16,7 @@ export async function putSpace(
     return { statusCode: 400, body: 'Missing required "id" parameter' };
 
   const spaceId = event.queryStringParameters.id;
-  const requestBody = JSON.parse(event.body);
+  const requestBody = parseJson(event.body);
 
   const updateKey = Object.keys(requestBody)[0];
   const updateValue = requestBody[updateKey];

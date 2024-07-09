@@ -9,6 +9,7 @@ import { getSpace } from './api/get';
 import { postSpace } from './api/post';
 import { putSpace } from './api/put';
 import { deleteSpace } from './api/delete';
+import { JsonError } from '../shared/parseJson';
 
 const ddbClient = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
@@ -33,6 +34,7 @@ export async function handler(event: APIGatewayProxyEvent, context: Context) {
     }
   } catch (e: unknown) {
     console.error(e);
+    if (e instanceof JsonError) return { statusCode: 400, body: e.message };
     return { statusCode: 500, body: 'Error inesperado' };
   }
 
