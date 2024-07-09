@@ -1,28 +1,23 @@
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { ulid } from 'ulid';
 
 export async function postSpace(
   event: APIGatewayProxyEvent,
-  ddb: DynamoDBClient
+  ddb: DynamoDBDocumentClient
 ): Promise<APIGatewayProxyResult> {
   const id = ulid();
   const item = JSON.parse(event.body);
 
   const result = await ddb.send(
-    new PutItemCommand({
+    new PutCommand({
       TableName: process.env.SPACES_TABLE,
       Item: {
-        pk: {
-          S: id,
-        },
-        location: {
-          S: item.location,
-        },
+        pk: id,
+        location: item,
       },
     })
   );
-  console.log(result)
 
   return {
     statusCode: 201,

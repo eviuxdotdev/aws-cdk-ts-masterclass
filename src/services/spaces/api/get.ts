@@ -1,13 +1,9 @@
-import {
-  DynamoDBClient,
-  GetItemCommand,
-  ScanCommand,
-} from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
 export async function getSpace(
   event: APIGatewayProxyEvent,
-  ddb: DynamoDBClient
+  ddb: DynamoDBDocumentClient
 ): Promise<APIGatewayProxyResult> {
   if (event.queryStringParameters) {
     if (!('id' in event.queryStringParameters))
@@ -18,9 +14,9 @@ export async function getSpace(
 
     const spaceId = event.queryStringParameters.id;
     const result = await ddb.send(
-      new GetItemCommand({
+      new GetCommand({
         TableName: process.env.SPACES_TABLE,
-        Key: { pk: { S: spaceId } },
+        Key: { pk: spaceId },
       })
     );
 
